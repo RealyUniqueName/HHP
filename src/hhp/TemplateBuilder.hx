@@ -29,8 +29,56 @@ class TemplateBuilder {
     static private var _viewClasses : Map<String,TypeDefinition> = new Map();
 
     /** Cache for parsed templates */
-    static private var _cache : Map<String,Array<Field>> = new Map();
+    static private var _cache : Map<String,{mtime:Float,fields:Array<Field>}> = new Map();
+    /** Cached type definitions for created classes */
+    static private var _createdClasses : Map<String,{mtime:Float, type:TypeDefinition}> = new Map();
 
+
+    /**
+    * Create a template class based on provided template `file` and return created class name
+    *
+    */
+    static public function createClass (file:String, pos:Position, baseClass:String) : String {
+        var key : String = (baseClass == null ? file : file + baseClass);
+        var className : String = TemplateBuilder.file2Class(file) + '_' + baseClass.replace('.', '_');
+
+        var type : TypeDefinition = null;
+        var cache = TemplateBuilder._createdClasses.get(key);
+        if (cache != null) {
+            var mtime : Float = FileSystem.stat(file).mtime.getTime();
+            if (cache.mtime == mtime) {
+                type = cache.type;
+            }
+        }
+
+        if( type == null ){
+            // var fields : Array<Field> = (file == null ? [] : parseTemplate(file, baseClass));
+            type = {
+                pos      : pos,
+                params   : [],
+                pack     : ['hhp'],
+                name     : className,
+                meta     : [{
+                    pos  : pos,
+                    name : ':hhp',
+                    params : [{expr:EConst(CString(file)), pos:pos}]
+                }],
+                kind     : TDClass(
+                    TemplateBuilder.str2TypePath(baseClass),
+                    [],
+                    false
+                ),
+                isExtern : false,
+                fields   : []
+            };
+
+            TemplateBuilder._createdClasses.set(key, {type:type, mtime:FileSystem.stat(file).mtime.getTime()});
+
+            Context.defineType(type);
+        }
+
+        return 'hhp.$className';
+    }//function createClass()
 
 
     /**
@@ -46,14 +94,7 @@ class TemplateBuilder {
             return null;
         }
 
-        var cache : Array<Field> = TemplateBuilder._cache.get(file);
-        if (cache != null) {
-            return cache;
-        }
-
-        var tplFields : Array<Field> = parseTemplate(file);
-        TemplateBuilder._cache.set(file, tplFields);
-
+        var tplFields : Array<Field> = parseTemplate(file, cls.superClass.t.toString());
         var ownFields : Array<Field> = Context.getBuildFields();
 
         var found  : Bool = false;
@@ -115,7 +156,15 @@ class TemplateBuilder {
     * Generate fields for template class based on content of template `file`
     *
     */
-    static private function parseTemplate (file:String) : Array<Field> {
+    static private function parseTemplate (file:String, parent:String = 'hhp.Template') : Array<Field> {
+        var cache = TemplateBuilder._cache.get(file);
+        if (cache != null) {
+            var mtime : Float = FileSystem.stat(file).mtime.getTime();
+            if (cache.mtime == mtime) {
+                return cache.fields;
+            }
+        }
+
         //file does not exist
         if (!FileSystem.exists(file)) {
             Context.error(HHP_META + ': unable to find ``$file``', Context.currentPos());
@@ -123,8 +172,8 @@ class TemplateBuilder {
 
         var content : String = File.getContent(file);
 
-        var parentTypePath : TypePath = TemplateBuilder.str2TypePath('hhp.Template');
-        var parent         : Type = Context.getType(parentTypePath.pack.join('.') + '.' + parentTypePath.name);
+        var parentTypePath : TypePath = TemplateBuilder.str2TypePath(parent);
+        var parentCls      : Type = Context.getType(parentTypePath.pack.join('.') + '.' + parentTypePath.name);
 
         var fields : Array<Field> = [];
         var pos    : Position = Context.makePosition({min:0, max:0, file:file});
@@ -153,7 +202,7 @@ class TemplateBuilder {
             //look for field names
             while( _erThisField.match(block) ){
                 var name : String = _erThisField.matched(1);
-                if( _erThisField.matchedRight().trim().fastCodeAt(0) != '('.code && !TemplateBuilder.hasField(parent, name) ){
+                if( _erThisField.matchedRight().trim().fastCodeAt(0) != '('.code && !TemplateBuilder.hasField(parentCls, name) ){
                     fields.push({
                         pos    : pos,
                         name   : name,
@@ -187,6 +236,8 @@ class TemplateBuilder {
                 });
             case _:
         }
+
+        TemplateBuilder._cache.set(file, {fields:fields, mtime:FileSystem.stat(file).mtime.getTime()});
 
         return fields;
     }//function parseTemplate()
@@ -227,6 +278,15 @@ class TemplateBuilder {
             params : []
         };
     }//function str2TypePath()
+
+
+    /**
+    * Convert filename to classname
+    *
+    */
+    static public inline function file2Class (file:String) : String {
+        return (file == null ? null : 'Template_' + _erNonAlphaNum.replace(file, '_'));
+    }//function file2ClassName()
 
 }//class TemplateBuilder
 

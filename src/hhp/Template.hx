@@ -78,4 +78,54 @@ class Template {
         this._isLayoutDisabled = true;
     }//function disableLayout()
 
+
+    /**
+    * Render another template `fileOrClass` inside this one.
+    *
+    * If `fileOrClass` is a constant `String` it is treated as file path. Otherwise it's another template class.
+    *
+    * If you want to rendered template to extend custom class, provide a `baseClass` argument.
+    *
+    * This method is available only inside a template file of current template.
+    */
+    macro private function render (eThis:Expr, fileOrClass:Expr, parameters:Expr = null, baseClass:Expr = null) : Expr {
+        var pos : Position = Context.currentPos();
+        var className : String = null;
+
+        var parent : String = switch (baseClass.expr) {
+            case EConst(CIdent('null')) : 'hhp.Template';
+            case _                      : ExprTools.toString(baseClass);
+        }
+
+        switch(fileOrClass.expr){
+            //file name
+            case EConst(CString(f)):
+                try{
+                    className = hhp.TemplateBuilder.createClass(f, pos, parent);
+                }catch(e:Dynamic){
+                    Context.error(Std.string(e), pos);
+                }
+            //classpath
+            case _:
+                className = ExprTools.toString(fileOrClass);
+        }
+
+        var block : Array<Expr> = [Context.parse('var hhp__render = new $className()', pos)];
+        if( parameters != null ){
+            switch(parameters.expr){
+                case EObjectDecl(fields):
+                    for(f in fields){
+                        block.push( Context.parse('hhp__render.${f.field} = ' + ExprTools.toString(f.expr), pos) );
+                    }
+                case EConst(CIdent('null')):
+                case _:
+                    Context.error('"parameters" argument must be an EObjectDecl', pos);
+            }
+        }
+        block.push( Context.parse('this._buffer += hhp__render.execute()', pos) );
+
+        return {expr:EBlock(block), pos:pos};
+    }//function render()
+
+
 }//class Template

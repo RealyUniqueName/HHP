@@ -1,0 +1,12 @@
+{
+    "name"         : "hhp",
+    "url"          : "https://github.com/RealyUniqueName/HHP",
+    "license"      : "MIT",
+    "tags"         : ["cross", "web", "template"],
+    "description"  : "HHP - Haxe Hypertext Preprocessor. PHP-like template system.",
+    "version"      : "1.0.0",
+    "releasenote"  : "Initial release",
+    "classPath"    : "src",
+    "contributors" : ["RealyUniqueName"],
+    "dependencies" : {}
+}

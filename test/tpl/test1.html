@@ -1,0 +1,18 @@
+<html>
+    <head>
+        <title><?=this.title?></title>
+    </head>
+
+    <body>
+        \<br/>
+        \\
+        <ul>
+        <?hhp
+            for (i in 0...this.total) {
+                this.echo('<li>Line number ${i + 1}</li>\n');
+            }
+        ?>
+        </ul>
+    </body>
+
+</html>

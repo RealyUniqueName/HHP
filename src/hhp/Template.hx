@@ -100,11 +100,8 @@ class Template {
         switch(fileOrClass.expr){
             //file name
             case EConst(CString(f)):
-                try{
-                    className = hhp.TemplateBuilder.createClass(f, pos, parent);
-                }catch(e:Dynamic){
-                    Context.error(Std.string(e), pos);
-                }
+                className = hhp.TemplateBuilder.createClass(f, pos, parent);
+
             //classpath
             case _:
                 className = ExprTools.toString(fileOrClass);

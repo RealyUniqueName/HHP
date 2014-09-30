@@ -72,9 +72,9 @@ class TemplateBuilder {
                 fields   : []
             };
 
-            TemplateBuilder._createdClasses.set(key, {type:type, mtime:FileSystem.stat(file).mtime.getTime()});
-
             Context.defineType(type);
+
+            TemplateBuilder._createdClasses.set(key, {type:type, mtime:FileSystem.stat(file).mtime.getTime()});
         }
 
         return 'hhp.$className';
@@ -272,6 +272,7 @@ class TemplateBuilder {
     */
     static public function str2TypePath (className:String) : TypePath {
         var cls : Array<String> = className.split('.');
+
         return {
             name   : cls.pop(),
             pack   : cls,

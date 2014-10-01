@@ -43,16 +43,17 @@ class TemplateBuilder {
         var className : String = TemplateBuilder.file2Class(file) + '_' + baseClass.replace('.', '_');
 
         var type : TypeDefinition = null;
+
         var cache = TemplateBuilder._createdClasses.get(key);
         if (cache != null) {
             var mtime : Float = FileSystem.stat(file).mtime.getTime();
+
             if (cache.mtime == mtime) {
                 type = cache.type;
             }
         }
 
         if( type == null ){
-            // var fields : Array<Field> = (file == null ? [] : parseTemplate(file, baseClass));
             type = {
                 pos      : pos,
                 params   : [],
@@ -60,7 +61,7 @@ class TemplateBuilder {
                 name     : className,
                 meta     : [{
                     pos  : pos,
-                    name : ':hhp',
+                    name : HHP_META,
                     params : [{expr:EConst(CString(file)), pos:pos}]
                 }],
                 kind     : TDClass(
@@ -93,6 +94,8 @@ class TemplateBuilder {
         if (file == null) {
             return null;
         }
+
+        // Context.registerModuleDependency(cls.module, file);
 
         var tplFields : Array<Field> = parseTemplate(file, cls.superClass.t.toString());
         var ownFields : Array<Field> = Context.getBuildFields();
@@ -172,8 +175,7 @@ class TemplateBuilder {
 
         var content : String = File.getContent(file);
 
-        var parentTypePath : TypePath = TemplateBuilder.str2TypePath(parent);
-        var parentCls      : Type = Context.getType(parentTypePath.pack.join('.') + '.' + parentTypePath.name);
+        var parentCls : Type = Context.getType(parent);
 
         var fields : Array<Field> = [];
         var pos    : Position = Context.makePosition({min:0, max:0, file:file});
@@ -191,7 +193,7 @@ class TemplateBuilder {
 
             //short echo
             if( block.fastCodeAt(0) == '='.code ){
-                code += 'this._buffer += Std.string(' + block.substr(1) + ');';
+                code += 'this.echo(' + block.substr(1) + ');';
             //code block
             }else if( block.substr(0, 3) == 'hhp' ){
                 code += block.substr(3);
@@ -275,8 +277,7 @@ class TemplateBuilder {
 
         return {
             name   : cls.pop(),
-            pack   : cls,
-            params : []
+            pack   : cls
         };
     }//function str2TypePath()
 

@@ -4,7 +4,7 @@ HHP is a type-safe templating system for Haxe greatly inspired by PHP programmin
 HHP stands for `Haxe Hypertext Preprocessor`.
 
 In PHP you can use plain PHP code inside of a template. This feature gives you unlimited control of template logic.
-Thanks tou macros we can do the same thing with Haxe, but with additional error detection at compile time!
+Thanks to macros we can do the same thing with Haxe, but with additional error detection at compile time!
 
 Features:
 ---------------
@@ -14,6 +14,12 @@ Features:
     * If you try to pass to template a variable which is not used in template.
     * If you're passing a value of wrong type to a template variable.
 * Include templates in templates.
+
+Rules:
+---------------
+1. In a template use tags `<?hhp ... ?>` to inline Haxe code. Use `this.echo(haxe_expression)` in inlined code to add `haxe_expression` value to output buffer.
+1. Use `<?=haxe_expression?>` to add value of `haxe_expression` to output buffer.
+1. Use `<?=this.render('another/template.html', ...)?>` to include another template (see [hhp.Template.render()](https://github.com/RealyUniqueName/HHP/blob/master/src/hhp/Template.hx#L82) method description)
 
 
 Examples:
@@ -40,7 +46,7 @@ Notice: inside of a template you must use `this` to access template variables an
 
 *Simple way:*
 
-```
+```Haxe
 var content : String = hhp.Hhp.render('templates/test.html', {
     title : 'Hello, HHP!',
     listSize : 2
@@ -50,7 +56,7 @@ trace(content);
 ```
 
 *Advanced way*
-```
+```Haxe
 //MyTemplate.hx
 @:hhp('templates/test.html')
 class MyTemplate extends hhp.Template {
@@ -62,7 +68,7 @@ class MyTemplate extends hhp.Template {
 
 
     /**
-    * You can also add any additional method and use them in a template.
+    * You can also add any additional methods and use them in a template.
     */
 }
 

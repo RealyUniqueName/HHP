@@ -61,7 +61,8 @@ trace(content);
 @:hhp('templates/test.html')
 class MyTemplate extends hhp.Template {
     /**
-    * Add template variable declaration if you want to constraint allowed type or set default value for this variable.
+    * Add template variable declaration if you want to constraint allowed type or
+    *   set default value for this variable.
     * If variable used in template is not declared in a class, it will be Dynamic.
     */
     public var listSize : Int = 5;

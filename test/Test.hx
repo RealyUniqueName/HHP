@@ -15,7 +15,7 @@ class Test {
     static public function main () : Void {
         var tpl = new TestTemplate();
         tpl.title = 'Testing template';
-        tpl.total = 10;
+        tpl.total = 12;
 
         trace(tpl.execute());
     }//function main()

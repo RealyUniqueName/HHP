@@ -84,9 +84,9 @@ class Template {
     *
     * If `fileOrClass` is a constant `String` it is treated as file path. Otherwise it's another template class.
     *
-    * If you want to rendered template to extend custom class, provide a `baseClass` argument.
+    * If you want rendered template to extend custom class, provide a `baseClass` argument.
     *
-    * This method is available only inside a template file of current template.
+    * This method is available only inside of template file of current template.
     */
     macro private function render (eThis:Expr, fileOrClass:Expr, parameters:Expr = null, baseClass:Expr = null) : Expr {
         var pos : Position = Context.currentPos();

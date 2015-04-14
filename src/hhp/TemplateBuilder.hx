@@ -74,7 +74,7 @@ class TemplateBuilder {
             };
 
             Context.defineType(type);
-
+            file = Hhp.path + file;
             TemplateBuilder._createdClasses.set(key, {type:type, mtime:FileSystem.stat(file).mtime.getTime()});
         }
 
@@ -124,6 +124,8 @@ class TemplateBuilder {
             }
         }
 
+        // Context.registerModuleDependency(cls.module, file);
+
         return fields;
     }//function build()
 
@@ -167,6 +169,8 @@ class TemplateBuilder {
                 return cache.fields;
             }
         }
+
+        file = hhp.Hhp.path + file;
 
         //file does not exist
         if (!FileSystem.exists(file)) {

@@ -1,12 +1,11 @@
 -main Test
--cp src
--cp example
+-cp ../src
 
 # If you want to shorten template paths, you can specify common path part like this
 #--macro hhp.Hhp.basePath('test/tpl')
 
--neko build/test.n
--cmd neko build/test.n
+-neko ../build/test.n
+-cmd neko ../build/test.n
 
-# -js build/test.js
-# -cmd nodejs build/test.js
+# -js ../build/test.js
+# -cmd nodejs ../build/test.js

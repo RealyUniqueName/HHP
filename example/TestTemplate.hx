@@ -5,7 +5,7 @@ package ;
 * Custom class for template
 *
 */
-@:hhp('example/tpl/test1.html')
+@:hhp('tpl/test1.html')
 class TestTemplate extends hhp.Template {
 
     /** Typed template variable */

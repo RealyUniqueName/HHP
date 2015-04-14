@@ -224,6 +224,7 @@ class TemplateBuilder {
         code += 'this._buffer += "' + content.substring(hxprev).replace('\\', '\\\\').replace('"', '\\"') + '";';
 
         code = 'function(){' + code + 'return this._buffer;}';
+
         //extract function body and create execute() method
         switch( Context.parseInlineString(code, pos).expr ){
             case EFunction(_,{ret:_,params:_,expr:expr,args:_}):

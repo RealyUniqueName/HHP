@@ -25,7 +25,10 @@ Base templates path
 ---------------
 If you have all your templates in for example `path/to/my/views/templates/` you can set this path
 as base path for all templates using compiler flag:
-`--macro hhp.Hhp.basePath('path/to/my/views/templates/')`
+```
+--macro hhp.Hhp.basePath('path/to/my/views/templates/')
+```
+And omit this common path part in templates.
 
 Examples:
 ---------------

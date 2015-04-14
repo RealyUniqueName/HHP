@@ -1,5 +1,9 @@
 package hhp;
 
+import haxe.macro.Context;
+import haxe.macro.Expr;
+import haxe.macro.ExprTools;
+
 
 using StringTools;
 
@@ -31,6 +35,39 @@ class Hhp {
 
 
 
+    /**
+    * Render template.
+    *
+    * If you want rendered template to extend custom class, provide a `baseClass` argument.
+    *
+    * `parameters` should be anonymous object declaration.
+    */
+    macro static public function render (file:String, parameters:Expr = null, baseClass:Expr = null) : Expr {
+        var pos : Position = Context.currentPos();
+        var className : String = null;
 
+        var parent : String = switch (baseClass.expr) {
+            case EConst(CIdent('null')) : 'hhp.Template';
+            case _                      : ExprTools.toString(baseClass);
+        }
+
+        className = hhp.TemplateBuilder.createClass(file, pos, parent);
+
+        var block : Array<Expr> = [Context.parse('var hhp__render = new $className()', pos)];
+        if( parameters != null ){
+            switch(parameters.expr){
+                case EObjectDecl(fields):
+                    for(f in fields){
+                        block.push( Context.parse('hhp__render.${f.field} = ' + ExprTools.toString(f.expr), pos) );
+                    }
+                case EConst(CIdent('null')):
+                case _:
+                    Context.error('"parameters" argument must be an EObjectDecl', pos);
+            }
+        }
+        block.push( Context.parse('hhp__render.execute()', pos) );
+
+        return {expr:EBlock(block), pos:pos};
+    }//function render()
 
 }//class Hhp

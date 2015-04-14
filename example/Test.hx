@@ -19,11 +19,10 @@ class Test {
 
         trace(tpl.execute());
 
-        // var txt = hhp.Hhp.render('test/tpl/test1.html', {
-        //     title : 'Wtf!!!',
-        //     total : 5
+        // var txt = hhp.Hhp.render('example/tpl/test1.html', {
+        //     title : 'Testing template',
+        //     total : 12
         // });
-
 
         // trace(txt);
     }//function main()

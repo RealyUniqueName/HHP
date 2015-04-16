@@ -119,7 +119,8 @@ class Template {
                     Context.error('"parameters" argument must be an EObjectDecl', pos);
             }
         }
-        block.push( Context.parse('hhp__render.execute()', pos) );
+        block.push( Context.parse('this._buffer += hhp__render.execute()', pos) );
+        block.push( Context.parse('null', pos) );
 
         return {expr:EBlock(block), pos:pos};
     }//function render()

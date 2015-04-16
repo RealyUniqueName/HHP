@@ -19,7 +19,7 @@ Rules:
 ---------------
 1. In a template use tags `<?hhp ... ?>` to inline Haxe code. Use `this.echo(haxe_expression)` in inlined code to add `haxe_expression` value to output buffer.
 1. Use `<?=haxe_expression?>` to add value of `haxe_expression` to output buffer.
-1. Use `<?=this.render('another/template.html', ...)?>` to include another template (see [hhp.Template.render()](https://github.com/RealyUniqueName/HHP/blob/master/src/hhp/Template.hx#L82) method description)
+1. Use `<?hhp this.render('another/template.html', ...); ?>` to include another template (see [hhp.Template.render()](https://github.com/RealyUniqueName/HHP/blob/master/src/hhp/Template.hx#L82) method description)
 
 Base templates path
 ---------------

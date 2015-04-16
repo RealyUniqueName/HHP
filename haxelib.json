@@ -4,8 +4,8 @@
     "license"      : "MIT",
     "tags"         : ["cross", "web", "template"],
     "description"  : "HHP - Haxe Hypertext Preprocessor. PHP-like template system.",
-    "version"      : "1.0.0",
-    "releasenote"  : "Initial release",
+    "version"      : "1.0.1",
+    "releasenote"  : "Fix this.render() so that it outputs to buffer instead of returning content",
     "classPath"    : "src",
     "contributors" : ["RealyUniqueName"],
     "dependencies" : {}

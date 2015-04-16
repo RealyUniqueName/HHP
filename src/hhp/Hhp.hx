@@ -70,4 +70,29 @@ class Hhp {
         return {expr:EBlock(block), pos:pos};
     }//function render()
 
+
+    /**
+    * Get template instance which can be executed later.
+    *
+    * If you want rendered template to extend custom class, provide a `baseClass` argument.
+    *
+    * `parameters` should be anonymous object declaration.
+    *
+    * Returns an instance of `hhp.Template` class or instance of `baseClass`.
+    * To generate content of that instance, use `.execute()` method.
+    */
+    macro static public function get (file:String, baseClass:Expr = null) : Expr {
+        var pos : Position = Context.currentPos();
+        var className : String = null;
+
+        var parent : String = switch (baseClass.expr) {
+            case EConst(CIdent('null')) : 'hhp.Template';
+            case _                      : ExprTools.toString(baseClass);
+        }
+
+        className = hhp.TemplateBuilder.createClass(file, pos, parent);
+
+        return Context.parse('new $className()', pos);
+    }//function get()
+
 }//class Hhp

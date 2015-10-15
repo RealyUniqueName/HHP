@@ -209,14 +209,16 @@ class TemplateBuilder {
             while( _erThisField.match(block) ){
                 var name : String = _erThisField.matched(1);
                 if( _erThisField.matchedRight().trim().fastCodeAt(0) != '('.code && !TemplateBuilder.hasField(parentCls, name) ){
-                    fields.push({
-                        pos    : pos,
-                        name   : name,
-                        meta   : [],
-                        kind   : FVar(TPath({name : 'Dynamic', pack : [], params : [] }), null),
-                        doc    : '',
-                        access : [APublic]
-                    });
+                    if (fields.filter(function(f) return f.name == name).length == 0) {
+                        fields.push({
+                            pos    : pos,
+                            name   : name,
+                            meta   : [],
+                            kind   : FVar(TPath({name : 'Dynamic', pack : [], params : [] }), null),
+                            doc    : '',
+                            access : [APublic]
+                        });
+                    }
                 };
                 block = block.replace(name, ' ');
             }

@@ -193,6 +193,8 @@ class TemplateBuilder {
             //code block
             }else if( block.substr(0, 3) == 'hhp' ){
                 code += block.substr(3);
+            }else{
+                Context.error('Unexpected "<?${block.substr(0, 3)}". Expecting "<?hhp" or "<?="', Context.makePosition({min:hxpos, max:hxpos + 3, file:file}));
             }
 
             hxprev = hxpos + 2 + block.length + 2;

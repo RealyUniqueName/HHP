@@ -98,28 +98,20 @@ class TemplateBuilder {
         // Context.registerModuleDependency(cls.module, file);
 
         var tplFields : Array<Field> = parseTemplate(file, cls.superClass.t.toString());
-        var ownFields : Array<Field> = Context.getBuildFields();
+        var fields : Array<Field> = Context.getBuildFields();
 
         var found  : Bool = false;
-        var fields : Array<Field> = [];
         for (field in tplFields) {
-            found = false;
-
-            for (i in 0...ownFields.length) {
-                if (ownFields[i].name == field.name) {
+            for(i in 0...fields.length) {
+                if(fields[i].name == field.name) {
                     found = true;
-
-                    if (field.name == 'execute') {
-                        fields.push( field );
-                    } else {
-                        fields.push( ownFields[i] );
+                    if(field.name == 'execute') {
+                        fields[i] = field;
                     }
-
-                    break;
                 }
             }
 
-            if (!found) {
+            if(!found) {
                 fields.push(field);
             }
         }

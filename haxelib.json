@@ -4,8 +4,8 @@
     "license"      : "MIT",
     "tags"         : ["cross", "web", "template"],
     "description"  : "HHP - Haxe Hypertext Preprocessor. PHP-like template system.",
-    "version"      : "1.0.4",
-    "releasenote"  : "Don't remove any fields from template classes. Fixed handling of invalid <? tags.",
+    "version"      : "1.0.5",
+    "releasenote"  : "Fixed custom template classes",
     "classPath"    : "src",
     "contributors" : ["RealyUniqueName"],
     "dependencies" : {}

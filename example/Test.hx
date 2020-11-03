@@ -13,18 +13,18 @@ class Test {
     *
     */
     static public function main () : Void {
-        // var tpl = new TestTemplate();
-        // tpl.title = 'Testing template';
-        // tpl.total = 12;
+        var tpl = new TestTemplate();
+        tpl.title = 'Testing template';
+        tpl.total = 12;
 
-        // trace(tpl.execute());
+        trace(tpl.execute());
 
-        // var txt = hhp.Hhp.render('tpl/test1.html', {
-        //     title : 'Testing template',
-        //     total : 12
-        // });
+        var txt = hhp.Hhp.render('tpl/test1.html', {
+            title : 'Testing template',
+            total : 12
+        });
 
-        // trace(txt);
+        trace(txt);
 
         var tpl = hhp.Hhp.get('tpl/test1.html');
         tpl.title = 'Testing';

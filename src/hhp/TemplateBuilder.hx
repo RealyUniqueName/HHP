@@ -100,8 +100,9 @@ class TemplateBuilder {
         var tplFields : Array<Field> = parseTemplate(file, cls.superClass.t.toString());
         var fields : Array<Field> = Context.getBuildFields();
 
-        var found  : Bool = false;
+        var found  : Bool;
         for (field in tplFields) {
+            found = false;
             for(i in 0...fields.length) {
                 if(fields[i].name == field.name) {
                     found = true;
